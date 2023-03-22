@@ -3,9 +3,10 @@ from tkinter import *
 
 # Responsável pelo controle de cada bloco individual
 class Bloco():
-    def __init__(self,  linha: int, coluna:int, conteudo:int, aberto:bool, bandeira:bool) -> None:
-        if aberto: bandeira = False         # Estar aberto e ter uma bandeira
-        else: aberto = False                # Não pode ocorrer ao mesmo tempo
+    def __init__(self,  linha: int, coluna:int, conteudo:int,
+                 aberto:bool, bandeira:bool) -> None:
+        if aberto: self.remove_bandeira()          # Estar aberto e ter uma bandeira
+        else: aberto = False                       # Não pode ocorrer ao mesmo tempo
 
         self.coluna:    int     =  coluna          # Sua localizacao com coluna
         self.linha:     int     =  linha           # e linha corespondente
@@ -13,6 +14,7 @@ class Bloco():
         self.aberto:    bool    =  aberto          # se o campo já foi aberto
         self.bandeira:  bool    =  bandeira        # se foi posto alguma bandeira.
 
+    ### Métodos do bloco ###
     def revela(self) -> None:                      # Abre um bloco antes fechado
         if not self.aberto and not self.bandeira:  # Caso haja uma baneira o bloco
             self.aberto = True                     # não pode ser aberto.
@@ -25,7 +27,7 @@ class Bloco():
         if self.bandeira:                          # a remove.
             self.bandeira = False
 
-    def index(self) -> set:                        # Retorna o endereço deste bloco
+    def index(self) -> list:                       # Retorna o endereço deste bloco
         return [self.linha, self.coluna]           # em linha e coluna.
 
 # Responsável pelo gerenciamento do campo
@@ -37,6 +39,7 @@ class Campo():
         self.minas:         int        = minas      # minas no campo
         self.campo:   dict[str, Bloco] = {}         # o próprio campo.
 
+    ### Métodos do campo ###
     def define_campo(self) -> dict:                 # Cria o campo com blocos
         for l in range(self.linhas):                # genéricos.
             for c in range(self.colunas):
@@ -66,6 +69,11 @@ class Campo():
                         try: self.campo[f'{endereco[0]+l}, {endereco[1]+c}'].conteudo += 1
                         except: continue
         return self.campo
+    
+    def revela_vizinhos(self):
+        pass
 
-    def __str__(self) -> str:                       # O padrão para prints
-        return f'{[x.conteudo for x in self.campo.values()]}'
+    def cria_campo(self) -> None:
+        self.define_campo()
+        self.arma_campo()
+        self.numera_campo()
