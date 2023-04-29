@@ -22,7 +22,25 @@ def restart(lose_window:Tk) -> None:
         lose_window.destroy()
         call('minesweeper.py', shell=True)
 
-def lose() -> None:
+def win_window() -> None:
+
+    # marca todas as minas
+    for line_number in range(board[0]):
+        for column_number in range(board[1]):
+            mine_button = button_matrix[line_number][column_number]
+            if mine_matrix[line_number][column_number] >= 9:
+                mine_button['bg'] = 'green'
+            mine_button['state'] = DISABLED
+
+    # Cria janela da vitória
+    win_window: Tk = Tk()
+    win_window.title('Vitória! ')
+    lose_text: Label = Label(win_window, text='Você ganhou! ').pack()
+    restart_button: Button = Button(win_window, text='Iniciar um novo jogo: ', command=
+                                    lambda lose_window = win_window: restart(lose_window)).pack()
+    win_window.mainloop()
+
+def lose_window() -> None:
     # marca todas as minas
     for line_number in range(board[0]):
         for column_number in range(board[1]):
@@ -33,12 +51,14 @@ def lose() -> None:
 
     # Cria janela de perda
     lose_window: Tk = Tk()
+    lose_window.title('Derrota!')
     lose_text: Label = Label(lose_window, text='Você perdeu! ').pack()
     restart_button: Button = Button(lose_window, text='Iniciar um novo jogo: ', command=
                                     lambda lose_window = lose_window: restart(lose_window)).pack()
     lose_window.mainloop()
 
 def open_neighbors(line: int, column: int) -> None:
+
     # Função recursiva para abrir os botões vizinhos
     control: set = -1, 0, 1
     for line_control in control:
@@ -58,8 +78,16 @@ def open_neighbors(line: int, column: int) -> None:
                         open_neighbors(line+line_control, column+column_control)
             except:
                 continue
+    win = True
+    for line in flag_matrix:
+        if 'close' in line:
+            win = False
+            break
+    if win:
+        win_window()
 
 def button_action(event, target_button:Button, right_click: bool = False) -> None:
+
     target_x:int = -1
     target_y:int = -1
 
@@ -69,7 +97,7 @@ def button_action(event, target_button:Button, right_click: bool = False) -> Non
                 target_x = line_number
                 target_y = column_number
 
-    if right_click and flag_matrix[target_x][target_y] == 'close':
+    if right_click and (flag_matrix[target_x][target_y] == 'close' or flag_matrix[target_x][target_y] == 'mine'):
         flag_matrix[target_x][target_y] = 'flag'
         target_button['bg'] = 'blue'
 
@@ -88,7 +116,15 @@ def button_action(event, target_button:Button, right_click: bool = False) -> Non
             open_neighbors(target_x, target_y)
 
     elif mine_matrix[target_x][target_y] > 8 and flag_matrix[target_x][target_y] != 'flag':
-        lose()
+        lose_window()
+
+    win = True
+    for line in flag_matrix:
+        if 'close' in line:
+            win = False
+            break
+    if win:
+        win_window()
 
     print(f'{target_x}, {target_y}')
 
@@ -200,7 +236,9 @@ while True:
     for line_number in range(board[1]):
             new_flag_line: list = []
             for column_number in range(board[0]):
-                new_flag_line.append('close')
+                if mine_matrix[line_number][column_number] >= 9:
+                    new_flag_line.append('mine')
+                else: new_flag_line.append('close')
             flag_matrix.append(new_flag_line)
     del new_flag_line
 
@@ -221,9 +259,15 @@ while True:
         button_matrix.append(new_button_line)
 
     # printa a matriz do jogo
+
     for x in range(0, board[1]):
         for y in range(0, board[0]):
             print(mine_matrix[y][x],end=' ')
+        print()
+
+    for x in range(0, board[1]):
+        for y in range(0, board[0]):
+            print(flag_matrix[y][x],end=' ')
         print()
 
     window.mainloop()
