@@ -12,7 +12,7 @@ def game_mode(menu: Tk, mode:str) -> None:
         board = [16, 16]
         mines_amount = 40
     elif mode == 'hard':
-        board = [16, 32]
+        board = [21, 21]
         mines_amount = 99
     menu.destroy()
 
@@ -20,7 +20,7 @@ def restart(lose_window:Tk) -> None:
         # Reinicia o jogo
         window.destroy()
         lose_window.destroy()
-        call('minesweeper.py', shell=True)
+        call('minesweeper.exe', shell=True)
 
 def win_window() -> None:
 
@@ -126,12 +126,11 @@ def button_action(event, target_button:Button, right_click: bool = False) -> Non
     if win:
         win_window()
 
-    print(f'{target_x}, {target_y}')
-
 
 def test_mine(event, target_button: Button) -> None:
-    target_button['bg'] = 'red'
-    target_button['state'] = DISABLED
+    if target_button['bg'] != 'blue':
+        target_button['bg'] = 'red'
+        target_button['state'] = DISABLED
 
 def test_flag(event, target_button: Button) -> None:
     if target_button['bg'] == 'blue':
@@ -143,6 +142,7 @@ def test_number(target_button: Button) -> None:
     target_button['text'] = f'{(randint(1, 7))}'
     target_button['font'] =  ('Proggy Square', 12)
     target_button['fg'] = 'black'
+
 while True:
 
     ### Definições do menu ###
@@ -157,7 +157,7 @@ while True:
                                 menu= menu,mode = 'easy': game_mode(menu, mode)).pack()
     medium_button: Button = Button(menu, text='Medium mode\n16x16\n40 minas', command=lambda
                                 menu= menu,mode = 'medium': game_mode(menu, mode)).pack()
-    hard_button: Button =   Button(menu, text='Hard mode\n16x30\n99 minas', command=lambda
+    hard_button: Button =   Button(menu, text='Hard mode\n21x21\n99 minas', command=lambda
                                 menu= menu, mode = 'hard': game_mode(menu, mode)).pack()
 
     ### Detalhes do jogo ###
@@ -257,18 +257,6 @@ while True:
                             height= button_size, width= button_size)
             new_button_line.append(new_button)
         button_matrix.append(new_button_line)
-
-    # printa a matriz do jogo
-
-    for x in range(0, board[1]):
-        for y in range(0, board[0]):
-            print(mine_matrix[y][x],end=' ')
-        print()
-
-    for x in range(0, board[1]):
-        for y in range(0, board[0]):
-            print(flag_matrix[y][x],end=' ')
-        print()
 
     window.mainloop()
     break
