@@ -4,23 +4,29 @@ from random import randint
 
 def game_mode(menu: Tk, mode:str) -> None:
     # Define o modo de jogo
-    global board, mines_amount
+    global board, button_size, mines_amount
     if mode == 'easy':
         board = [9, 9]
         mines_amount = 10
+        button_size = 32
     elif mode == 'medium':
         board = [16, 16]
         mines_amount = 40
+        button_size = 32
     elif mode == 'hard':
-        board = [21, 21]
+        board = [26, 26]
         mines_amount = 99
+        button_size = 26
     menu.destroy()
 
 def restart(lose_window:Tk) -> None:
-        # Reinicia o jogo
-        window.destroy()
-        lose_window.destroy()
-        call('minesweeper.exe', shell=True)
+        try:
+            # Reinicia o jogo
+            window.destroy()
+            lose_window.destroy()
+            call('minesweeper.py', shell=True)
+        except:
+            call('minesweeper.exe', shell=True)
 
 def win_window() -> None:
 
@@ -157,7 +163,7 @@ while True:
                                 menu= menu,mode = 'easy': game_mode(menu, mode)).pack()
     medium_button: Button = Button(menu, text='Medium mode\n16x16\n40 minas', command=lambda
                                 menu= menu,mode = 'medium': game_mode(menu, mode)).pack()
-    hard_button: Button =   Button(menu, text='Hard mode\n21x21\n99 minas', command=lambda
+    hard_button: Button =   Button(menu, text='Hard mode\n26x26\n99 minas', command=lambda
                                 menu= menu, mode = 'hard': game_mode(menu, mode)).pack()
 
     ### Detalhes do jogo ###
@@ -187,7 +193,6 @@ while True:
     menu.mainloop()
 
     ### Definições do jogo ###
-    button_size: int = 32
     x:int = board[1] * button_size # padronizar x para linha
     y:int = board[0] * button_size # e y para colunas
 
@@ -197,10 +202,10 @@ while True:
     window.title('Minesweeper')
     window.geometry(f'{x}x{y}')
 
-    ### Matrizes ###
+    ### Definição das Matrizes ###
     button_matrix:list[Button] = [] # Armazena todos os botões
-    mine_matrix:list[int] = []      # Armazena as posições das minas e os númros
-    flag_matrix:list[str] = []      # Armazena as posições das bandeiras e botões abertos
+    mine_matrix:list[int]      = [] # Armazena as posições das minas e os númros
+    flag_matrix:list[str]      = [] # Armazena as posições das bandeiras e botões abertos
 
     # cria matriz das minas
     for line_number in range(board[1]):
