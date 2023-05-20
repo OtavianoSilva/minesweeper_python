@@ -9,6 +9,7 @@ class Menu(Tk):
 
         self.title('Menu')
         self.geometry('300x400')
+        self.config(bg='gray60')
         
         self._create_buttons()
         self._create_examples()
@@ -36,14 +37,14 @@ class Menu(Tk):
 
     def _create_buttons(self):
 
-        menu_text: Label = Label(self, text='Bem vindo ao campo minado\nEscolha seu modo de jogo:')
+        menu_text: Label = Label(self, text='Bem vindo ao campo minado\nEscolha seu modo de jogo:', bg='gray60')
         menu_text.pack()
 
-        easy_button: Button =   Button(self, text='Easy mode\n9x9\n10 mianas',command=lambda
+        easy_button: Button =   Button(self, text='Easy mode\n9x9\n10 mianas', bg='gray65',command=lambda
                                 menu= self, mode = 'easy': self._create_board(mode)).pack()
-        medium_button: Button = Button(self, text='Medium mode\n16x16\n40 minas', command=lambda
+        medium_button: Button = Button(self, text='Medium mode\n16x16\n40 minas', bg='gray65', command=lambda
                                 menu= self, mode = 'medium': self._create_board(mode)).pack()
-        hard_button: Button =   Button(self, text='Hard mode\n26x26\n99 minas', command=lambda
+        hard_button: Button =   Button(self, text='Hard mode\n26x26\n99 minas', bg='gray65', command=lambda
                                 menu= self, mode = 'hard': self._create_board(mode)).pack()
         
     def _example_mine_action(self, event, target_button: Button) -> None:
@@ -67,7 +68,7 @@ class Menu(Tk):
         example_mine_button.place(x=35, y=250, height= 32, width= 32)
         example_mine_button.bind('<Button-1>', lambda event, button = example_mine_button:
                                 self._example_mine_action(event, target_button= button))
-        example_mine_text: Label = Label(self, text='Ao tocar com o botão esquerdo\nem uma mina, você perde.')
+        example_mine_text: Label = Label(self, text='Ao tocar com o botão esquerdo\nem uma mina, você perde.', bg='gray60')
         example_mine_text.place(x=72, y=250)
 
         example_flag_button: Button = Button(self, bg='gray')
@@ -76,25 +77,26 @@ class Menu(Tk):
                                 self._example_mine_action(event= event, target_button= button))
         example_flag_button.bind('<Button-3>', lambda event, button = example_flag_button:
                                 self._example_flag_action(event= event, target_button= button))
-        example_flag_text: Label = Label(self, text='Ao tocar com o botão direito\numa bandeira bloqueará o bloco')
+        example_flag_text: Label = Label(self, text='Ao tocar com o botão direito\numa bandeira bloqueará o bloco', bg='gray60')
         example_flag_text.place(x=72, y=290)
 
         example_number_button: Button = Button(self, bg='gray')
         example_number_button.place(x=35, y=330, height= 32, width= 32)
         example_number_button["command"] = lambda button = example_number_button: self._example_number_action(button)
-        example_number_text: Label = Label(self, text=' E ao tocar com o botão esquerdo\nonde não há mina, o número de minas\npróximas é revelado')
+        example_number_text: Label = Label(self, text=' E ao tocar com o botão esquerdo\nonde não há mina, o número de minas\npróximas é revelado', bg='gray60')
         example_number_text.place(x=72, y=330)
     
     def _main(self):
         self.mainloop()
 
 class Board(Tk):
-    def __init__(self, board: list, button_size: int, mines_amount: int) -> None:
+    def __init__(self, board: list[int], button_size: int, mines_amount: int) -> None:
         super().__init__()
-        self.board = board
-        self.mines_amount = mines_amount
-        self.button_size = button_size
-        self.start_time = time()
+        self.board: list[int] = board
+        self.mines_amount: int = mines_amount
+        self.flags_amount: int = mines_amount
+        self.button_size: int = button_size
+        self.start_time: time = time()
 
         self.x: int = board[1] * button_size
         self.y: int = board[0] * button_size
@@ -103,9 +105,15 @@ class Board(Tk):
         self.mine_matrix: list[int]      = []
         self.flag_matrix: list[str]      = []
 
-        self.title('Minesweeper')
-        self.geometry(f'{self.x}x{self.y}')
+        self.header_frame: Frame = Frame(self, height=70, width=self.y, bg='gray70')
+        self.header_frame.pack()
+        self.board_game_frame: Frame = Frame(self, height=self.x, width=self.y)
+        self.board_game_frame.pack()
 
+        self.title('Minesweeper')
+        self.geometry(f'{self.x}x{self.y+70}')
+
+        self._create_header()
         self._create_board()
         self._main()
 
@@ -143,6 +151,7 @@ class Board(Tk):
             win = EndWindow(True, self)
 
     def _button_action(self, event, target_button: Button, right_click: bool = False) -> None:
+        # self.stopwatch.start_cont()
 
         target_x:int = -1
         target_y:int = -1
@@ -156,10 +165,12 @@ class Board(Tk):
         if right_click and (self.flag_matrix[target_x][target_y] == 'close' or self.flag_matrix[target_x][target_y] == 'mine'):
             self.flag_matrix[target_x][target_y] = 'flag'
             target_button['bg'] = 'blue'
+            self._increase_flag_counter()
 
         elif right_click and self.flag_matrix[target_x][target_y] == 'flag':
             self.flag_matrix[target_x][target_y] = 'close'
             target_button['bg'] = 'gray'
+            self._decrease_flag_counter()
 
         elif self.flag_matrix[target_x][target_y] == 'close' and self.mine_matrix[target_x][target_y] < 8:
             number = self.mine_matrix[target_x][target_y]
@@ -192,9 +203,32 @@ class Board(Tk):
                     if self.mine_matrix[line_number][column_number] >= 9:
                         mine_button['bg'] = 'green'
                     mine_button['state'] = DISABLED
+                    # self.stopwatch.stop_cont()
             win = EndWindow(True, self)
 
-    def _create_board(self) -> None:
+    def _create_stopwatch(self):
+        pass
+
+    def _create_flag_counter(self):
+        self.flag_counter_frame: Frame = Frame(self.header_frame, height=50, width=60, bg='gray85')
+        self.flag_counter_frame.place(x=10,y=10)
+
+        self.flag_counter_label: Label = Label(self.flag_counter_frame, text=self.flags_amount, font=('Proggy Square', 15), bg='gray85')
+        self.flag_counter_label.place(x=17, y=12)
+
+    def _decrease_flag_counter(self):
+        self.flags_amount += 1
+        self.flag_counter_label.config(text=self.flags_amount)
+
+    def _increase_flag_counter(self):
+        self.flags_amount -= 1
+        self.flag_counter_label.config(text=self.flags_amount)
+
+    def _create_header(self):
+        self._create_stopwatch()
+        self._create_flag_counter()
+
+    def _create_mine_matrix(self) -> None:
         for line_number in range(self.board[1]):
             new_mine_line = []
             for column_number in range(self.board[0]):
@@ -209,6 +243,7 @@ class Board(Tk):
                     self.mine_matrix[mine_x][mine_y] = 9
                     break
 
+    def _numbers_mine_matrix(self) -> None:
         control: set = (-1, 0, 1)
         for line in range(self.board[1]):
             for column in range(self.board[0]):
@@ -220,6 +255,7 @@ class Board(Tk):
                                 if (0 <= r < self.board[1]) and (0 <= c < self.board[0]):
                                     self.mine_matrix[r][c] += 1
 
+    def _create_flag_matrix(self) -> None:
         for line_number in range(self.board[1]):
                 new_flag_line: list = []
                 for column_number in range(self.board[0]):
@@ -228,10 +264,11 @@ class Board(Tk):
                     else: new_flag_line.append('close')
                 self.flag_matrix.append(new_flag_line)
 
+    def _put_buttons_in_frame(self) -> None:
         for line in range(self.board[1]):
             new_button_line: list = []
             for column in range(self.board[0]):
-                new_button = Button(self, text=' ', bg='gray')
+                new_button = Button(self.board_game_frame, text=' ', bg='gray')
             
                 new_button.bind('<Button-1>', lambda event, new_button = new_button:
                                 self._button_action(event, new_button))
@@ -243,8 +280,44 @@ class Board(Tk):
                 new_button_line.append(new_button)
             self.button_matrix.append(new_button_line)
 
+    def _create_board(self) -> None:
+        #self.stopwatch = StopwatchWidget(self)
+        self._create_mine_matrix()
+        self._numbers_mine_matrix()
+        self._create_flag_matrix()
+        self._put_buttons_in_frame()
+
     def _main(self):
         self.mainloop()
+
+class StopwatchWidget(Tk):
+    def __init__(self, master) -> None:
+        self.runing: bool = False
+
+        self.frame: Frame = Frame(master)
+        self.frame.pack()
+        self.cont_timer: int = 0
+        
+        self._create_stopwatch()
+
+    def _create_stopwatch(self) -> None:
+        self.lable_cont: Label = Label(self.frame, text=self.cont_timer)
+        self.lable_cont.pack()
+
+    def start_cont(self) -> None:
+        self.runing: bool = True
+        self._cont()
+
+    def stop_cont(self) -> None:
+        self.runing: bool = False
+
+    def _cont(self) -> None:
+        if self.runing:
+            self.lable_cont.config(text=self.cont_timer+1)
+            self.lable_cont.after(1000, self._cont)
+
+    def _get_conut(self) -> int:
+        return self.cont_timer
 
 class EndWindow(Tk):
     def __init__(self, win: bool, board: Board) -> None:
