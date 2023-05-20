@@ -290,34 +290,6 @@ class Board(Tk):
     def _main(self):
         self.mainloop()
 
-class StopwatchWidget(Tk):
-    def __init__(self, master) -> None:
-        self.runing: bool = False
-
-        self.frame: Frame = Frame(master)
-        self.frame.pack()
-        self.cont_timer: int = 0
-        
-        self._create_stopwatch()
-
-    def _create_stopwatch(self) -> None:
-        self.lable_cont: Label = Label(self.frame, text=self.cont_timer)
-        self.lable_cont.pack()
-
-    def start_cont(self) -> None:
-        self.runing: bool = True
-        self._cont()
-
-    def stop_cont(self) -> None:
-        self.runing: bool = False
-
-    def _cont(self) -> None:
-        if self.runing:
-            self.lable_cont.config(text=self.cont_timer+1)
-            self.lable_cont.after(1000, self._cont)
-
-    def _get_conut(self) -> int:
-        return self.cont_timer
 
 class EndWindow(Tk):
     def __init__(self, win: bool, board: Board) -> None:
