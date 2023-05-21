@@ -117,6 +117,21 @@ class Board(Tk):
         self._create_board()
         self._main()
 
+    def _check_if_won(self):
+        win = True
+        for line in self.flag_matrix:
+            if 'close' in line:
+                win = False
+                break
+        if win:
+            for line_number in range(self.board[0]):
+                for column_number in range(self.board[1]):
+                    mine_button = self.button_matrix[line_number][column_number]
+                    if self.mine_matrix[line_number][column_number] >= 9:
+                        mine_button['bg'] = 'green'
+                    mine_button['state'] = DISABLED
+            win = EndWindow(True, self)
+
     def _open_neighbors(self, line: int, column: int) -> None:
         control: set = -1, 0, 1
         for line_control in control:
@@ -136,19 +151,7 @@ class Board(Tk):
                             self._open_neighbors(line+line_control, column+column_control)
                 except:
                     continue
-        win = True
-        for line in self.flag_matrix:
-            if 'close' in line:
-                win = False
-                break
-        if win:
-            for line_number in range(self.board[0]):
-                for column_number in range(self.board[1]):
-                    mine_button = self.button_matrix[line_number][column_number]
-                    if self.mine_matrix[line_number][column_number] >= 9:
-                        mine_button['bg'] = 'green'
-                    mine_button['state'] = DISABLED
-            win = EndWindow(True, self)
+        self._check_if_won()
 
     def _button_action(self, event, target_button: Button, right_click: bool = False) -> None:
         # self.stopwatch.start_cont()
@@ -165,12 +168,12 @@ class Board(Tk):
         if right_click and (self.flag_matrix[target_x][target_y] == 'close' or self.flag_matrix[target_x][target_y] == 'mine'):
             self.flag_matrix[target_x][target_y] = 'flag'
             target_button['bg'] = 'blue'
-            self._increase_flag_counter()
+            self._decrease_flag_counter()
 
         elif right_click and self.flag_matrix[target_x][target_y] == 'flag':
             self.flag_matrix[target_x][target_y] = 'close'
             target_button['bg'] = 'gray'
-            self._decrease_flag_counter()
+            self._increase_flag_counter()
 
         elif self.flag_matrix[target_x][target_y] == 'close' and self.mine_matrix[target_x][target_y] < 8:
             number = self.mine_matrix[target_x][target_y]
@@ -191,20 +194,7 @@ class Board(Tk):
                     mine_button['state'] = DISABLED
             lose = EndWindow(False, self)
 
-        win = True
-        for line in self.flag_matrix:
-            if 'close' in line:
-                win = False
-                break
-        if win:
-            for line_number in range(self.board[0]):
-                for column_number in range(self.board[1]):
-                    mine_button = self.button_matrix[line_number][column_number]
-                    if self.mine_matrix[line_number][column_number] >= 9:
-                        mine_button['bg'] = 'green'
-                    mine_button['state'] = DISABLED
-                    # self.stopwatch.stop_cont()
-            win = EndWindow(True, self)
+        self._check_if_won()
 
     def _create_stopwatch(self):
         pass
@@ -217,11 +207,11 @@ class Board(Tk):
         self.flag_counter_label.place(x=17, y=12)
 
     def _decrease_flag_counter(self):
-        self.flags_amount += 1
+        self.flags_amount -= 1
         self.flag_counter_label.config(text=self.flags_amount)
 
     def _increase_flag_counter(self):
-        self.flags_amount -= 1
+        self.flags_amount += 1
         self.flag_counter_label.config(text=self.flags_amount)
 
     def _create_header(self):
@@ -296,11 +286,12 @@ class EndWindow(Tk):
         super().__init__()
         self.board = board
 
-        final_time = (time()-board.start_time) if (time()-board.start_time)/60 < 1 else (time()-board.start_time)/60
+        time_game = (time()-board.start_time)
+        final_time = time_game/60 if time_game/60 < 1 else time_game
 
         self.title('Vitória! ' if win else 'Derrota!')
         text: Label = Label(self, text='Você ganhou! ' if win else 'Você perdeu!').pack()
-        runtime = Label(self, text=f'Com um tempo de {final_time:.2f}'+(' segundos' if final_time/60 < 1 else ' minutos')).pack()
+        runtime = Label(self, text=f'Com um tempo de {final_time:.2f}'+(' segundos' if (final_time/60) < 1 else ' minutos')).pack()
         restart_button: Button = Button(self, text='Iniciar um novo jogo: ', command=
                                     self._restart).pack()
 
