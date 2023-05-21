@@ -130,7 +130,7 @@ class Board(Tk):
                     if self.mine_matrix[line_number][column_number] >= 9:
                         mine_button['bg'] = 'green'
                     mine_button['state'] = DISABLED
-            win = EndWindow(True, self)
+            return EndWindow(True, self)
 
     def _open_neighbors(self, line: int, column: int) -> None:
         control: set = -1, 0, 1
@@ -196,25 +196,25 @@ class Board(Tk):
 
         self._check_if_won()
 
-    def _create_stopwatch(self):
+    def _create_stopwatch(self) -> None:
         pass
 
-    def _create_flag_counter(self):
+    def _create_flag_counter(self) -> None:
         self.flag_counter_frame: Frame = Frame(self.header_frame, height=50, width=60, bg='gray85')
         self.flag_counter_frame.place(x=10,y=10)
 
         self.flag_counter_label: Label = Label(self.flag_counter_frame, text=self.flags_amount, font=('Proggy Square', 15), bg='gray85')
         self.flag_counter_label.place(x=17, y=12)
 
-    def _decrease_flag_counter(self):
+    def _decrease_flag_counter(self) -> None:
         self.flags_amount -= 1
         self.flag_counter_label.config(text=self.flags_amount)
 
-    def _increase_flag_counter(self):
+    def _increase_flag_counter(self) -> None:
         self.flags_amount += 1
         self.flag_counter_label.config(text=self.flags_amount)
 
-    def _create_header(self):
+    def _create_header(self) -> None:
         self._create_stopwatch()
         self._create_flag_counter()
 
@@ -286,12 +286,11 @@ class EndWindow(Tk):
         super().__init__()
         self.board = board
 
-        time_game = (time()-board.start_time)
-        final_time = time_game/60 if time_game/60 < 1 else time_game
+        final_time = (time()-board.start_time)
 
         self.title('Vitória! ' if win else 'Derrota!')
         text: Label = Label(self, text='Você ganhou! ' if win else 'Você perdeu!').pack()
-        runtime = Label(self, text=f'Com um tempo de {final_time:.2f}'+(' segundos' if (final_time/60) < 1 else ' minutos')).pack()
+        runtime = Label(self, text=f'Com um tempo de {(final_time/60):.2f} minutos').pack()
         restart_button: Button = Button(self, text='Iniciar um novo jogo: ', command=
                                     self._restart).pack()
 
