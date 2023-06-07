@@ -1,3 +1,4 @@
+from os import path
 from subprocess import call
 from time import time
 from tkinter import *
@@ -300,7 +301,7 @@ class EndWindow(Tk):
         try:
             self.destroy()
             self.board.destroy()
-            call('minesweeper.py', shell=True)
+            call(str(path.dirname(path.realpath(__file__))) + '/minesweeper.py' , shell=True)
         except:
             call('minesweeper.exe', shell=True)
         
