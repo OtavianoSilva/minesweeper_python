@@ -1,17 +1,20 @@
 from tkinter import *
 from random import randint
 from minesweeper.board import Board
+from minesweeper.ranking import Ranking
+from user.profile import Profile
 
 class Menu(Tk):
     def __init__(self) -> None:
         super().__init__()
 
         self.title('Menu')
-        self.geometry('300x400')
+        self.geometry('350x450')
         self.config(bg='gray60')
         
         self._create_buttons()
         self._create_examples()
+        self._cerate_option_buttons()
         self._main()
 
     def _create_board(self, mode):
@@ -85,5 +88,17 @@ class Menu(Tk):
         example_number_text: Label = Label(self, text=' E ao tocar com o botão esquerdo\nonde não há mina, o número de minas\npróximas é revelado', bg='gray60')
         example_number_text.place(x=72, y=330)
     
+    def _cerate_option_buttons(self):
+        option_frame = Frame(self, bg='gray60')
+        option_frame.pack()
+
+        profie_button = Button(option_frame, text="Ver perfil", bg= 'gray')
+        profie_button["command"] = Profile
+        profie_button.pack()
+
+        ranking_button = Button(option_frame, text="Ver ranking", bg= "gray")
+        ranking_button["command"] = Ranking
+        ranking_button.pack()
+
     def _main(self):
         self.mainloop()
