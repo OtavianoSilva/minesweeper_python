@@ -1,3 +1,4 @@
+from minesweeper.game import Game
 from os.path import dirname, realpath
 from subprocess import call
 from time import time
@@ -9,6 +10,9 @@ class EndWindow(Tk):
         self.board = board
 
         final_time = (time()-board.start_time)
+
+        game = Game(final_time, self.board.dificulty, self.board.current_player)
+        self.current_player.save_game(game)
 
         self.title('Vitória! ' if win else 'Derrota!')
         text: Label = Label(self, text='Você ganhou! ' if win else 'Você perdeu!').pack()

@@ -4,8 +4,12 @@ from random import randint
 from minesweeper.end_window import EndWindow
 
 class Board(Tk):
-    def __init__(self, board: list[int], button_size: int, mines_amount: int) -> None:
+    def __init__(self, board: list[int], button_size: int, mines_amount: int, mode:str, player: object) -> None:
         super().__init__()
+
+        self.current_player = player
+        self.dificulty = mode
+
         self.board: list[int] = board
         self.mines_amount: int = mines_amount
         self.flags_amount: int = mines_amount

@@ -5,8 +5,10 @@ from minesweeper.ranking import Ranking
 from user.profile import Profile
 
 class Menu(Tk):
-    def __init__(self) -> None:
+    def __init__(self, user) -> None:
         super().__init__()
+
+        self.current_player = user
 
         self.title('Menu')
         self.geometry('350x450')
@@ -23,19 +25,19 @@ class Menu(Tk):
             button_size = 32
             mines_amount = 10
             self.destroy()
-            game = Board(board, button_size, mines_amount)
+            game = Board(board, button_size, mines_amount, mode, self.current_player)
         elif mode == 'medium':
             board = [16, 16]
             button_size = 32
             mines_amount = 40
             self.destroy()
-            game = Board(board, button_size, mines_amount)
+            game = Board(board, button_size, mines_amount, mode, self.current_player)
         elif mode == 'hard':
             board = [26, 26]
             button_size = 26
             mines_amount = 99
             self.destroy()
-            game = Board(board, button_size, mines_amount)
+            game = Board(board, button_size, mines_amount, mode, self.current_player)
 
     def _create_buttons(self):
 

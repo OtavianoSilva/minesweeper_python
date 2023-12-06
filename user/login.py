@@ -75,7 +75,7 @@ class LoginPage(Tk):
                     for x in users:
                         if x.name == self.name_entry.get() and x.password == self.password_entry.get():
                             self.messages_label["text"] = ""
-                            Menu()
+                            Menu(x)
                             self.destroy()
                     else:
                         self.messages_label["text"] = "Usuário não encontrado"
