@@ -1,6 +1,6 @@
 from tkinter import *
 from pickle import *
-from minesweeper import Menu
+from minesweeper.menu import Menu
 
 class LoginPage(Tk):
     PADX = 10
