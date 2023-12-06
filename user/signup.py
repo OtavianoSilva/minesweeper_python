@@ -1,5 +1,6 @@
 from tkinter import *
 from pickle import *
+from os import path
 from .user import User
 
 class SignUpPage(Tk):
@@ -83,24 +84,27 @@ class SignUpPage(Tk):
 
     def validate(self) -> None:
         try:
-            with open("usuarios.txt", "rb") as archive:
-                users = [x.email for x in load(archive)]
-                if self.name_entry.get() == "" or self.birth_entry.get() == "" or self.email_entry.get() == "" or self.password_entry.get() == "" or self.conf_password_entry.get() == "":
-                    self.messages_label["text"] = "Campo inválido"
+            if path.exists("usuarios.txt"):
+                with open("usuarios.txt", "rb") as archive:
+                    users = [x.email for x in load(archive)]
+            else:
+                users = []
 
-                elif self.password_entry.get() != self.conf_password_entry.get():
-                    self.messages_label["text"] = "As senhas não batem"
-                elif self.email_entry.get() in users:
-                    self.messages_label["text"] = "Email já pertence a um usuário"
-                else:
-                    self.messages_label["text"] = ""
-                    user = User(self.name_entry.get(), self.birth_entry.get(), self.email_entry.get(), self.password_entry.get())
-                    self.save(user)
-                    self.mostra_usuarios()
+            if self.name_entry.get() == "" or self.birth_entry.get() == "" or self.email_entry.get() == "" or self.password_entry.get() == "" or self.conf_password_entry.get() == "":
+                self.messages_label["text"] = "Campo inválido"
 
-        except:
-            with open("usuarios.txt", "wb") as archive:
-                dump([], archive)
+            elif self.password_entry.get() != self.conf_password_entry.get():
+                self.messages_label["text"] = "As senhas não batem"
+            elif self.email_entry.get() in users:
+                self.messages_label["text"] = "Email já pertence a um usuário"
+            else:
+                self.messages_label["text"] = ""
+                user = User(self.name_entry.get(), self.birth_entry.get(), self.email_entry.get(), self.password_entry.get())
+                self.save(user)
+                self.mostra_usuarios()
+
+        except Exception as error:
+            print(f"Erro de : {error}")
 
 
     def save(self, user: User) -> None:

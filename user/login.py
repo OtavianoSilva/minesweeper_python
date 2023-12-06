@@ -79,6 +79,6 @@ class LoginPage(Tk):
                             self.destroy()
                     else:
                         self.messages_label["text"] = "Usuário não encontrado"
-        except:
-            with open("usuarios.txt", "wb") as archive:
-                dump([], archive)
+        except Exception as error:
+            print(f"Erro de : {error}")
+            
