@@ -11,7 +11,7 @@ class LoginPage(Tk):
     def __init__(self, *args, **kwargs) -> None:
         Tk.__init__(self, *args, **kwargs)
         self.title = "Login"
-        self.geometry("450x600")
+        self.geometry("350x450")
         self.config(bg=self.BG)
 
         title_label = Label(self, text="Informe seus dados: ", padx=20, pady=15, font=self.FONT, bg=self.BG)
@@ -73,7 +73,7 @@ class LoginPage(Tk):
 
                 else:
                     for x in users:
-                        if x.name == self.name_entry.get() and x.password == self.password_entry.get():
+                        if x.name == self.name_entry.get() and x.get_password() == self.password_entry.get():
                             self.messages_label["text"] = ""
                             Menu(x)
                             self.destroy()

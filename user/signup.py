@@ -13,7 +13,7 @@ class SignUpPage(Tk):
     def __init__(self, *args, **kwargs) -> None:
         Tk.__init__(self, *args, **kwargs)
         self.title = "Sign up"
-        self.geometry("450x600")
+        self.geometry("350x450")
         self.config(bg=self.BG)
 
         title_label = Label(self, text="Cadastre-se", padx=20, pady=15, font=self.FONT, bg=self.BG)
@@ -120,6 +120,7 @@ class SignUpPage(Tk):
 
         with open("usuarios.txt", "wb") as archive:
                 dump(self.data, archive)
+        self.messages_label["text"] = "Usuário cadastrado"
 
     def mostra_usuarios(self):
         with open("usuarios.txt", "rb") as archive:

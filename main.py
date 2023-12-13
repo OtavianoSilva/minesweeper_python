@@ -11,7 +11,7 @@ class Menu(Tk):
     def __init__(self) -> None:
         Tk.__init__(self)
         self.title = "Menu"
-        self.geometry("450x600")
+        self.geometry("350x450")
         self.config(bg='gray60')
 
         self.main_frame = Frame(self, padx=self.PADX, pady=self.PADY*9, bg='gray60')
