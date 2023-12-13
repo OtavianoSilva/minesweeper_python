@@ -29,12 +29,37 @@ class User():
                 with open("usuarios.txt", "wb") as archive:
                     dump(self.data, archive)
                     self.data = None
-                    
+
             except Exception as error:
                 print(f"Erro de : {error}")
  
         else:
             print("Valor errado para função")
     
+
+    def edit_infos(self, name, birth, email, password):
+        try:
+            with open("usuarios.txt", "rb") as archive:
+                self.data = [x for x in load(archive)]
+                for user in self.data:
+                    if user.email == self.email:
+                        self.data.remove(user)
+
+                        self.name = name
+                        self.birth_date = birth
+                        self.email = email
+                        self.__password = password
+                        
+                        self.data.append(self)
+                        break
+                
+            with open("usuarios.txt", "wb") as archive:
+                dump(self.data, archive)
+                self.data = None
+
+        except Exception as error:
+            print(f"Erro de : {error}")
+
+
     def get_password(self):
         return self.__password

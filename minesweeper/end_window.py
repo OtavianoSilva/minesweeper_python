@@ -11,7 +11,7 @@ class EndWindow(Tk):
 
         final_time = (time()-board.start_time)
 
-        game = Game(final_time, self.board.dificulty, current_player)
+        game = Game(final_time/60, self.board.dificulty, current_player, win)
         current_player.save_game(game)
 
         self.title('Vitória! ' if win else 'Derrota!')
