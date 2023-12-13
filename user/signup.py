@@ -83,10 +83,14 @@ class SignUpPage(Tk):
         self.mainloop()
 
     def validate(self) -> None:
-        try:
             if path.exists("usuarios.txt"):
-                with open("usuarios.txt", "rb") as archive:
-                    users = [x.email for x in load(archive)]
+                try:
+                    with open("usuarios.txt", "rb") as archive:
+                        users = [x.email for x in load(archive)]
+                except EOFError:
+                    users = []
+                    self.data = users
+                    self.save(users)
             else:
                 users = []
 
@@ -103,17 +107,19 @@ class SignUpPage(Tk):
                 self.save(user)
                 self.mostra_usuarios()
 
-        except Exception as error:
-            print(f"Erro de : {error}")
-
 
     def save(self, user: User) -> None:
-        with open("usuarios.txt", "rb") as archive:
-            self.data = load(archive)
-            self.data.append(user)
+        try:
+            with open("usuarios.txt", "rb") as archive:
+                self.data = load(archive)
+                self.data.append(user)
+
+        except EOFError:
+            with open("usuarios.txt", "wb") as archive:
+                dump(self.data, archive)
 
         with open("usuarios.txt", "wb") as archive:
-            dump(self.data, archive)
+                dump(self.data, archive)
 
     def mostra_usuarios(self):
         with open("usuarios.txt", "rb") as archive:
