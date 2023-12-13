@@ -48,7 +48,7 @@ class Board(Tk):
                     if self.mine_matrix[line_number][column_number] >= 9:
                         mine_button['bg'] = 'green'
                     mine_button['state'] = DISABLED
-            return EndWindow(True, self)
+            return EndWindow(True, self, self.current_player)
 
     def _open_neighbors(self, line: int, column: int) -> None:
         control: set = -1, 0, 1
@@ -110,7 +110,7 @@ class Board(Tk):
                     if self.mine_matrix[line_number][column_number] >= 9:
                         mine_button['bg'] = 'red'
                     mine_button['state'] = DISABLED
-            lose = EndWindow(False, self)
+            lose = EndWindow(False, self, self.current_player)
 
         self._check_if_won()
 

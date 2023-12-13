@@ -1,4 +1,5 @@
 from minesweeper.game import Game
+from time import time
 
 class User():
     def __init__(self, name, birth_date, email, password) -> None:
@@ -7,12 +8,12 @@ class User():
         self.email = email
         self.password = password
 
-        self.bast_game = None
-        self.game_history = list
+        self.bast_game = time()
+        self.game_history = []
 
     def save_game(self, game):
         if isinstance(game, Game):
-            if game.time > self.bast_game.time:
+            if game.time > self.bast_game:
                 self.bast_game = game
             self.game_history.append(game)
             print('deu certo ae')

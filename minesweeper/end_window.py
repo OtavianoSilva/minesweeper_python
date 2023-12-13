@@ -5,14 +5,14 @@ from time import time
 from tkinter import *
 
 class EndWindow(Tk):
-    def __init__(self, win: bool, board) -> None:
+    def __init__(self, win: bool, board, current_player) -> None:
         super().__init__()
         self.board = board
 
         final_time = (time()-board.start_time)
 
-        game = Game(final_time, self.board.dificulty, self.board.current_player)
-        self.current_player.save_game(game)
+        game = Game(final_time, self.board.dificulty, current_player)
+        current_player.save_game(game)
 
         self.title('Vitória! ' if win else 'Derrota!')
         text: Label = Label(self, text='Você ganhou! ' if win else 'Você perdeu!').pack()
