@@ -28,9 +28,10 @@ class Profile(Tk):
         self.email_label = Label(self.main_frame, text=f"{self.current_player.email}", font=self.FONT, bg=self.BG)
         self.email_label.pack()
 
-        self.bast_game_label = Label(self.main_frame, text=f"Melhor jogo\n{self.current_player.bast_game}",
-                                     font=self.FONT, bg=self.BG)
-        self.bast_game_label.pack()
+        for mode in self.current_player.bast_game:
+            bast_game_label = Label(self.main_frame, text=f"Melhor jogo {mode}\n{self.current_player.bast_game[mode]:.2f} minutos",
+                                        font=self.FONT, bg=self.BG)
+            bast_game_label.pack()
 
         self.edit_button = Button(self.main_frame, text="Editar informações", font=self.FONT, bg=self.BG)
         self.edit_button["command"] = self.set_edit_frame

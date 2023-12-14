@@ -9,13 +9,17 @@ class User():
         self.email = email
         self.__password = password
 
-        self.bast_game = time()
+        self.bast_game = {
+            'easy' :    time(),
+            'medium' :  time(),
+            'hard' :    time()
+        }
         self.game_history = []
 
     def save_game(self, game):
         if isinstance(game, Game):
-            if game.time > self.bast_game:
-                self.bast_game = game
+            if game.win and game.time < self.bast_game[game.dificulty]:
+                self.bast_game[game.dificulty] = game.time
             self.game_history.append(game)
             try:
                 with open("usuarios.txt", "rb") as archive:

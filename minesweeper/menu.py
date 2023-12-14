@@ -24,19 +24,16 @@ class Menu(Tk):
             board = [9, 9]
             button_size = 32
             mines_amount = 10
-            self.destroy()
             game = Board(board, button_size, mines_amount, mode, self.current_player)
         elif mode == 'medium':
             board = [16, 16]
             button_size = 32
             mines_amount = 40
-            self.destroy()
             game = Board(board, button_size, mines_amount, mode, self.current_player)
         elif mode == 'hard':
             board = [26, 26]
             button_size = 26
             mines_amount = 99
-            self.destroy()
             game = Board(board, button_size, mines_amount, mode, self.current_player)
 
     def _create_buttons(self):
