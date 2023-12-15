@@ -29,13 +29,17 @@ class Profile(Tk):
         self.email_label.pack()
 
         for mode in self.current_player.bast_game:
-            bast_game_label = Label(self.main_frame, text=f"Melhor jogo {mode}\n{self.current_player.bast_game[mode]:.2f} minutos",
+            bast_game_label = Label(self.main_frame, text=f"Melhor jogo {mode}\n{self.current_player.bast_game[mode] + ' minutos' if self.current_player.bast_game[mode] < 100000 else 'Sem dados'}",
                                         font=self.FONT, bg=self.BG)
             bast_game_label.pack()
 
         self.edit_button = Button(self.main_frame, text="Editar informações", font=self.FONT, bg=self.BG)
         self.edit_button["command"] = self.set_edit_frame
         self.edit_button.pack()
+
+        self.delete_button = Button(self.main_frame,text="Deletar conta", font=self.FONT, bg=self.BG)
+        self.delete_button["command"] = self.delete_accunt
+        self.delete_button.pack()
 
     def set_edit_frame(self) -> None:
         self.main_frame.destroy()
@@ -108,3 +112,8 @@ class Profile(Tk):
                                        self.email_entry.get(), self.password_entry.get())
         
         self.messages_label["text"] = "Alterações salvas\nreinicie o sistema"
+
+    def delete_accunt(self) -> None:
+        self.current_player.delete()
+        self.destroy()
+    

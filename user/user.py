@@ -64,6 +64,18 @@ class User():
         except Exception as error:
             print(f"Erro de : {error}")
 
+    def delete(self) -> None:
+        try:
+            with open("usuarios.txt", "rb") as archive:
+                self.data = [x for x in load(archive)]
+                for user in self.data:
+                    if user.email == self.email:
+                        self.data.remove(user)
+            with open("usuarios.txt", "wb") as archive:
+                dump(self.data, archive)
+                self.data = None
+        except Exception as error:
+            print(f"Erro de : {error}")
 
     def get_password(self):
         return self.__password

@@ -1,3 +1,3 @@
 from time import *
 x = time()
-print(x)
+print(f"{x if x < 100 else 0}")
