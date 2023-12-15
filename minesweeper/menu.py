@@ -96,7 +96,7 @@ class Menu(Tk):
         profie_button.pack()
 
         ranking_button = Button(option_frame, text="Ver ranking", bg= "gray")
-        ranking_button["command"] = Ranking
+        ranking_button["command"] = lambda cp = self.current_player: Ranking(cp)
         ranking_button.pack()
 
     def _main(self):
