@@ -16,7 +16,7 @@ class Ranking(Tk):
 
         self.current_player = current_player
 
-        self.buttons_frame = Frame(self)
+        self.buttons_frame = Frame(self, bg='gray60', padx=self.PADX,pady=self.PADY*8)
         self.buttons_frame.pack()
 
         self.rank_easy_button = Button(self.buttons_frame, text="Rank Easy games", font=self.FONT, bg=self.BG)
@@ -33,10 +33,10 @@ class Ranking(Tk):
 
     def show_rank(self, mode:str) -> None:
         self.buttons_frame.destroy()
-        self.rank_frame = Frame(self)
+        self.rank_frame = Frame(self,bg='gray60', padx=self.PADX,pady=self.PADY*8)
         self.rank_frame.pack()
 
-        self.title_label = Label(self.rank_frame, text=f"Melhores jogos {mode}")
+        self.title_label = Label(self.rank_frame, text=f"Melhores jogos {mode}", bg=self.BG)
 
         try:
             with open("usuarios.txt", "rb") as archive:
@@ -44,10 +44,9 @@ class Ranking(Tk):
                 bast_game = self.current_player
                 length = 3 if len(users) > 3 else len(users)
                 for x in range(length):
-                    for i in range(len(users)):
-                        if users[i].bast_game[mode] <  bast_game.bast_game[mode]:
-                            bast_game = users[i]
-                    bast_game_label = Label(self.rank_frame, text=f"{bast_game.name} - {bast_game.bast_game[mode]:.2f} minutos")
+                    bast_game = min(users, key=lambda user: user.bast_game[mode])
+                    bast_game_label = Label(self.rank_frame, text=f"{bast_game.name} - {bast_game.bast_game[mode]:.2f} minutos",
+                                            font=self.FONT, bg=self.BG)
                     bast_game_label.pack()
                     users.remove(bast_game)
         except Exception as error:

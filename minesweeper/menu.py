@@ -17,7 +17,6 @@ class Menu(Tk):
         self._create_buttons()
         self._create_examples()
         self._cerate_option_buttons()
-        self._main()
 
     def _create_board(self, mode):
         if mode == 'easy':
@@ -99,5 +98,5 @@ class Menu(Tk):
         ranking_button["command"] = lambda cp = self.current_player: Ranking(cp)
         ranking_button.pack()
 
-    def _main(self):
+    def run(self):
         self.mainloop()
