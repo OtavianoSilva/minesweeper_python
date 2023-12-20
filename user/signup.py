@@ -123,6 +123,6 @@ class SignUpPage(Tk):
         self.messages_label["text"] = "Usuário cadastrado"
 
     def mostra_usuarios(self):
-        with open("usuarios.txt", "rb") as archive:
+        with open("usuarios.txt", "rb") as archive: 
             for user in load(archive):
                 print(user.name)
