@@ -47,7 +47,7 @@ python main.py
 ## Estrutura do projeto:
 
 ### Fluxo da aplicação:
-![Aplication Workflow](/AplicationWOrkFlow.png "Aplication Workflow").
+![Aplication Workflow](minesweeper_python/AplicationWorkFlow.png "Aplication Workflow").
 
 Partindo da pasta principal encontramos 3 arquivos (contando este readme) e duas pastas melhor detalhados adiante.
 Os arquivos são respectivamente:
