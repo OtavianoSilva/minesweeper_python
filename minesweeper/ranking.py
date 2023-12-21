@@ -45,7 +45,7 @@ class Ranking(Tk):
                 length = 3 if len(users) > 3 else len(users)
                 for x in range(length):
                     bast_game = min(users, key=lambda user: user.bast_game[mode])
-                    bast_game_label = Label(self.rank_frame, text=f"{bast_game.name} - {self.current_player.bast_game[mode]:.2f} minutos" if self.current_player.bast_game[mode] < 100000 else "Sem dados",
+                    bast_game_label = Label(self.rank_frame, text=f"{bast_game.name} - {bast_game.bast_game[mode]:.2f} minutos" if bast_game.bast_game[mode] < 100000 else "Sem dados",
                                             font=self.FONT, bg=self.BG)
                     bast_game_label.pack()
                     users.remove(bast_game)

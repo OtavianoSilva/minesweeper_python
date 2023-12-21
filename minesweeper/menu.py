@@ -40,7 +40,7 @@ class Menu(Tk):
         menu_text: Label = Label(self, text='Bem vindo ao campo minado\nEscolha seu modo de jogo:', bg='gray60')
         menu_text.pack()
 
-        easy_button: Button =   Button(self, text='Easy mode\n9x9\n10 mianas', bg='gray65',command=lambda
+        easy_button: Button =   Button(self, text='Easy mode\n9x9\n10 minas', bg='gray65',command=lambda
                                 menu= self, mode = 'easy': self._create_board(mode)).pack()
         medium_button: Button = Button(self, text='Medium mode\n16x16\n40 minas', bg='gray65', command=lambda
                                 menu= self, mode = 'medium': self._create_board(mode)).pack()
