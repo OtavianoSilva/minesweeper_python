@@ -24,9 +24,9 @@ class Menu(Tk):
         self.login_button["command"] = LoginPage
         self.login_button.pack()
 
-        self.sigup_button = Button(self.main_frame, text="Quero me registrar", font=self.FONT, padx=self.PADX, pady=self.PADY, bg='gray65')
-        self.sigup_button["command"] = SignUpPage
-        self.sigup_button.pack()
+        self.signup_button = Button(self.main_frame, text="Quero me registrar", font=self.FONT, padx=self.PADX, pady=self.PADY, bg='gray65')
+        self.signup_button["command"] = SignUpPage
+        self.signup_button.pack()
         self.mainloop()
 
 if __name__ == '__main__':

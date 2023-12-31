@@ -1,20 +1,20 @@
 from tkinter import *
-from time import time
 from random import randint
 from minesweeper.end_window import EndWindow
+from minesweeper.stopwatch import Stopwatch
 
 class Board(Tk):
     def __init__(self, board: list[int], button_size: int, mines_amount: int, mode:str, player: object) -> None:
         super().__init__()
 
+        self.stopwatch      = Stopwatch(self.update_counter_label)
         self.current_player = player
-        self.dificulty = mode
+        self.difficulty     = mode
 
-        self.board: list[int] = board
-        self.mines_amount: int = mines_amount
-        self.flags_amount: int = mines_amount
-        self.button_size: int = button_size
-        self.start_time: time = time()
+        self.board: list[int]   = board
+        self.mines_amount: int  = mines_amount
+        self.flags_amount: int  = mines_amount
+        self.button_size: int   = button_size
 
         self.x: int = board[1] * button_size
         self.y: int = board[0] * button_size
@@ -48,6 +48,7 @@ class Board(Tk):
                     if self.mine_matrix[line_number][column_number] >= 9:
                         mine_button['bg'] = 'green'
                     mine_button['state'] = DISABLED
+            self.stopwatch.stop_count()
             return EndWindow(True, self, self.current_player)
 
     def _open_neighbors(self, line: int, column: int) -> None:
@@ -72,7 +73,8 @@ class Board(Tk):
         self._check_if_won()
 
     def _button_action(self, event, target_button: Button, right_click: bool = False) -> None:
-        # self.stopwatch.start_cont()
+
+        if not self.stopwatch.is_counting: self.stopwatch.start_count()
 
         target_x:int = -1
         target_y:int = -1
@@ -110,12 +112,20 @@ class Board(Tk):
                     if self.mine_matrix[line_number][column_number] >= 9:
                         mine_button['bg'] = 'red'
                     mine_button['state'] = DISABLED
+            self.stopwatch.stop_count()
             lose = EndWindow(False, self, self.current_player)
 
         self._check_if_won()
 
+    def update_counter_label(self, number: int) -> None:
+        if isinstance(number, int): self.time_counter_label.config(text=str(number))
+
     def _create_stopwatch(self) -> None:
-        pass
+        self.stopwatch_frame: Frame = Frame(self.header_frame, height=50, width=60, bg='gray85')
+        self.stopwatch_frame.place(x=110, y=10)
+
+        self.time_counter_label: Label = Label(self.header_frame, text=str(0), font=('Proggy Square', 15), bg='gray85')
+        self.time_counter_label.place(x=130, y=25)
 
     def _create_flag_counter(self) -> None:
         self.flag_counter_frame: Frame = Frame(self.header_frame, height=50, width=60, bg='gray85')
@@ -189,7 +199,6 @@ class Board(Tk):
             self.button_matrix.append(new_button_line)
 
     def _create_board(self) -> None:
-        #self.stopwatch = StopwatchWidget(self)
         self._create_mine_matrix()
         self._numbers_mine_matrix()
         self._create_flag_matrix()

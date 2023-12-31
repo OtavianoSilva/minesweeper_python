@@ -30,7 +30,7 @@ class Profile(Tk):
 
         for mode in self.current_player.bast_game:
             bast_game_label = Label(self.main_frame, 
-            text=f"Melhor jogo {mode}\n {self.current_player.bast_game[mode]:.2f} minutos" if self.current_player.bast_game[mode] < 100000 else "Sem dados",
+            text=f"Melhor jogo {mode}\n {self.current_player.bast_game[mode]:.2f} segundos" if self.current_player.bast_game[mode] < 100000 else "Sem dados",
             font=self.FONT, bg=self.BG)
             bast_game_label.pack()
 
