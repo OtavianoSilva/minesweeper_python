@@ -19,7 +19,6 @@ class Stopwatch():
             sleep(1)
             if self.update_callback: self.update_callback(self.count)
 
-
     def start_count(self):
         self.thread.start()
 

@@ -24,7 +24,7 @@ Marcação de Minas: Os jogadores podem marcar as células suspeitas de conterem
 A maioria destas já vem instalada no python, mas caso não podem ser facilmente acessadas atráves do pip install.
 1. Tkinter;
 2. Random;
-3. Time;
+3. Threading;
 4. Pickle;
 5. Os;
 6. Subprocess.
@@ -47,29 +47,30 @@ python main.py
 ## Estrutura do projeto:
 
 ### Fluxo da aplicação:
-![Aplication Workflow](https://github.com/OtavianoSilva/minesweeper_python/blob/main/AplicationWorkFlow.png "Aplication Workflow").
+![Application Workflow](https://github.com/OtavianoSilva/minesweeper_python/blob/main/ApplicationWorkFlow.png "Application Workflow").
 
 Partindo da pasta principal encontramos 3 arquivos (contando este readme) e duas pastas melhor detalhados adiante.
 Os arquivos são respectivamente:
-* main.py: Arquivo principal em que o usuario é direcionado para as telas de login ou cadastro, e:
-* usuarios.txt: em que são salvos todos os usuários do sistema e todos os jogos registrados por eles.
+* main.py: Arquivo principal em que o usuário é direcionado para as telas de login ou cadastro, e:
+* usuários.txt: em que são salvos todos os usuários do sistema e todos os jogos registrados por eles.
 
 Na pasta user estão todos os arquivos que gerenciam ou se relacionam diretamente com os usuários, como:
 
 * login.py: que gerencia e valida o acesso dos usuários ao menu principal do jogo;
 * profile.py: que permite o usuário editar suas informações, ver seu melhor jogo e deletar sua conta;
-* signup.py: que gerencia os registros de novos usuáriose, e;
-* user.py: que contem a classe de usuário do sistema, responsavel pelo gerenciamento individual de cada perfil.
+* signup.py: que gerencia os registros de novos usuários, e;
+* user.py: que contem a classe de usuário do sistema, responsável pelo gerenciamento individual de cada perfil.
 
 A outra pasta é minesweeper, que contem a lógica e sistema pós-login:
 
-* board.py: gêrencia o "tábuleiro" em que o jogo acontece, e todas as lógicas envolvidas nisto;
-* end_window.py: é a janela de finalização de cada jogo, informa a vitória ou anúncia a derrota;
+* board.py: gerencia o "tabuleiro" em que o jogo acontece, e todas as lógicas envolvidas nisto;
+* end_window.py: é a janela de finalização de cada jogo, informa a vitória ou anuncia a derrota;
 * game.py: contém a classe dos registros de cada jogo, se foi ganho e seu tempo de duração;
-* menu.py: é o menu do jogo, dá as opções de dificuldade e possibilita o acesso ao perfil e ao ranking, e;
-* ranking: que separando pelas dificuldade mostra o top 3 dos melhores jogos de cada categoria.
+* menu.py: é o menu do jogo, dá as opções de dificuldade e possibilita o acesso ao perfil e ao ranking;
+* ranking: que separando pelas dificuldade mostra o top 3 dos melhores jogos de cada categoria, e;
+* stopwatch: contem a casse do contador de tempo das partias.
 
-## Detalalhamento do funcionamento:
+## Detalhamento do funcionamento:
 ### Da interface gráfica:
 Todo o sistema roda utilizando a biblioteca tkinter para interfaces gráficas com o paradigma orientado a objetos por meio de herança da classe Tk da biblioteca. Tratando os widgets e objetos que compões as telas como propriedades da classe. Exemplo do arquivo main.py:
 
@@ -94,7 +95,7 @@ class Menu(Tk):
 ...
 ~~~
 
-Em todos os arquivos que possuem alguma leitur de dados, como nas telas de cadastro e login, as entradas se não com o componenete Entry da própria biblioteca, exempo da entrada e extração deste dado no arquivo signup.py:
+Em todos os arquivos que possuem alguma leitura de dados, como nas telas de cadastro e login, as entradas se não com o componente Entry da própria biblioteca, exemplo da entrada e extração deste dado no arquivo signup.py:
 
 ~~~Python
 ...
@@ -124,7 +125,7 @@ def validate(self) -> None:
 ...
 ~~~
 
-Também é utulizada a lógica disponibilizda pela biblioteca de poder alocar componentes a um frame, então manipular o frame e de efeito cascata afetar o que nele está contido, como no arquivo profile.py:
+Também é utilizada a lógica disponibilizada pela biblioteca de poder alocar componentes a um frame, então manipular o frame e de efeito cascata afetar o que nele está contido, como no arquivo profile.py:
 Um frame é criado mostrando algumas informações do usuário:
 
 ~~~Python
@@ -182,7 +183,7 @@ def _put_buttons_in_frame(self) -> None:
 ~~~
 
 ### Da lógica do campo minado:
-Os arquivos do campo minado estão todos na pasta minesweeper, e eles desenpenham diferentes papéis no funcionamento do jogo, antes do jogo começar o usuáio escolhe a dificuldade do jogo (tamanho do campo e número de minas) na tela de Menu que logo inicializa o jogo:
+Os arquivos do campo minado estão todos na pasta minesweeper, e eles desempenham diferentes papéis no funcionamento do jogo, antes do jogo começar o usuário escolhe a dificuldade do jogo (tamanho do campo e número de minas) na tela de Menu que logo inicializa o jogo:
 
 ~~~Python
 ...
@@ -197,17 +198,20 @@ def _create_board(self, mode):
 ...
 ~~~
 
-Board é o arquivo principal do jogo ele possuí uma classe hómonoma e se reponsábiliza por inicializar, e gerencia o fluxo do jogo, detalhado a seguir:
+Board é o arquivo principal do jogo ele possuí uma classe homônoma e se responsabiliza por inicializar, e gerencia o fluxo do jogo, detalhado a seguir:
 
-Logo no método construtor da classe já são inicializadas diversas váriveis de controle que servirão mais tarde para as lógicas do jogo, como uma matriz de bandeiras que armazena se os campos estão abertos/descobertos ou com bandeira, também a matriz numérica que armazena as posições das minas e os números que devem aparecer quando o usuário abre aquele determinado espaço. Junto disto outros aspectos do jogo como a inicialização do timer, assim como os contadores de minas e tamanho dos componentes.
+Logo no método construtor da classe já são inicializadas diversas variáveis de controle que servirão mais tarde para as lógicas do jogo, como uma matriz de bandeiras que armazena se os campos estão abertos/descobertos ou com bandeira, também a matriz numérica que armazena as posições das minas e os números que devem aparecer quando o usuário abre aquele determinado espaço. Junto disto outros aspectos do jogo como a inicialização da classe Stopwatch, assim como os contadores de minas e tamanho dos componentes.
 
 ~~~Python
     ...
+    self.stopwatch      = Stopwatch(self.update_counter_label)
+    self.current_player = player
+    self.difficulty     = mode
+
     self.board: list[int] = board
     self.mines_amount: int = mines_amount
     self.flags_amount: int = mines_amount
     self.button_size: int = button_size
-    self.start_time: time = time()
 
     self.x: int = board[1] * button_size
     self.y: int = board[0] * button_size
@@ -218,7 +222,7 @@ Logo no método construtor da classe já são inicializadas diversas váriveis d
     ...
 ~~~
 
-Para a funcionálidade do código é utilizado, por exemplo, a biblioteca random para aleatorizar a colocação das minas no tabuleiro do jogo:
+Para a funcionalidade do código é utilizado, por exemplo, a biblioteca random para aleatorizar a colocação das minas no tabuleiro do jogo:
 
 ~~~Python
     ...
@@ -242,10 +246,28 @@ def _open_neighbors(self, line: int, column: int) -> None:
             for column_control in control:
                 if (line == 0 or column == 0) and (line_control == -1 or column_control == -1): continue
                 ...
-                        # Chama a própia função para todas as posições próximas.
+                        # Chama a própria função para todas as posições próximas.
                         if self.mine_matrix[line+line_control][column+column_control] == 0:
                             self._open_neighbors(line+line_control, column+column_control)
                         ...
+~~~
+
+No arquivo stopwatch.py estão os processos envolvidos com o relógio de tempo que aparece no canto superior do jogo, nele é utilizada a biblioteca Threading do python para que o contador funcione em simultâneo ao restante do jogo sem conflitos ou concorrência:
+~~~Python
+...
+self._stop: ThreadEvent = ThreadEvent()
+self.thread:Thread      = Thread(target=self.__conter)
+...
+~~~
+~~~Python
+...
+def __conter(self) -> None:
+    if not self.is_counting: self.is_counting = True
+    while not self._stop.is_set():
+        self.count += 1
+        sleep(1)
+        if self.update_callback: self.update_callback(self.count)
+...
 ~~~
 
 O último envolvido no jogo é o End_window que aparece quando o usuário ganha ou perde e ainda mostra seu tempo.
@@ -271,18 +293,18 @@ def save(self, user: User) -> None:
     self.messages_label["text"] = "Usuário cadastrado"
 ~~~
 
-Todos os usuários salvos, tal qual os jogos realizados por eles são armazenados como objetos (suas definições esão respectivamente nos arquivos user.py e game.py) em que o objeto dos usuários possuí um dicionário para armazenar os melhores jogos de cada categôria e mais genéricamente uma lista para todos os outros jogos. Isto, na tela de End_window é criado uma instância de game que é logo associada a seu usuároi e gerenciado no próprio objeto:
+Todos os usuários salvos, tal qual os jogos realizados por eles são armazenados como objetos (suas definições estão respectivamente nos arquivos user.py e game.py) em que o objeto dos usuários possuí um dicionário para armazenar os melhores jogos de cada categoria e mais genericamente uma lista para todos os outros jogos. Isto, na tela de End_window é criado uma instância de game que é logo associada a seu usuários e gerenciado no próprio objeto:
 
 ~~~Python
 def save_game(self, game):
     ...
     # Faz a verificação dos melhores jogos.
-    if game.win and game.time < self.bast_game[game.dificulty]:
-        self.bast_game[game.dificulty] = game.time
+    if game.win and game.time < self.bast_game[game.difficulty]:
+        self.bast_game[game.difficulty] = game.time
     self.game_history.append(game)
     try:
         ...
-        # Salva os dados do usuário com o acrecio de do jogo.
+        # Salva os dados do usuário com o acréscimo de do jogo.
         with open("usuarios.txt", "wb") as archive:
             dump(self.data, archive)
             self.data = None
@@ -290,7 +312,7 @@ def save_game(self, game):
     ...
 ~~~
 
-Seguindo esta ordem de responsábilizar o objeto por ele mesmo, a janela profile (perfil) pode editar o usuário corrente ou deleta-lo, que novamente, acontece tudo dentro do próprio objeto:
+Seguindo esta ordem de responsabilizar o objeto por ele mesmo, a janela profile (perfil) pode editar o usuário corrente ou deleta-lo, que novamente, acontece tudo dentro do próprio objeto:
 
 ~~~Python
 def edit_infos(self, name, birth, email, password):
@@ -304,7 +326,7 @@ def get_password(self):
     return self.__password
 ~~~
 
-Na página de ranking há uma busca precisa nos dados para traser os usuários e os jogos com menor tempo em uma determinada dificuldade de jogo, resolvido com uma lista, função min(), lambda e algumas remoções:
+Na página de ranking há uma busca precisa nos dados para trazer os usuários e os jogos com menor tempo em uma determinada dificuldade de jogo, resolvido com uma lista, função min(), lambda e algumas remoções:
 
 ~~~Python
 with open("usuarios.txt", "rb") as archive:
